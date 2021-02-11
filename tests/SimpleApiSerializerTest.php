@@ -15,6 +15,7 @@ use CNastasi\JsonApi\Example\User;
 use CNastasi\JsonApi\Example\UserCollection;
 use CNastasi\Serializer\Converter\CollectionConverter;
 use CNastasi\Serializer\Converter\CompositeValueObjectConverter;
+use CNastasi\Serializer\Converter\DateTimeConverter;
 use CNastasi\Serializer\Converter\DateTimeImmutableConverter;
 use CNastasi\Serializer\Converter\SimpleValueObjectConverter;
 use CNastasi\Serializer\DefaultSerializer;
@@ -38,6 +39,7 @@ class SimpleApiSerializerTest extends TestCase
 
         $serializer = new DefaultSerializer(
             [
+                new DateTimeConverter(),
                 new SimpleValueObjectConverter(),
                 new CompositeValueObjectConverter(),
                 new CollectionConverter(),

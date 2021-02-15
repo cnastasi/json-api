@@ -10,7 +10,6 @@ use CNastasi\Example\Name;
 use CNastasi\Example\Person;
 use CNastasi\Serializer\Converter\CollectionConverter;
 use CNastasi\Serializer\Converter\CompositeValueObjectConverter;
-use CNastasi\Serializer\Converter\DateTimeConverter;
 use CNastasi\Serializer\Converter\DateTimeImmutableConverter;
 use CNastasi\Serializer\Converter\SimpleValueObjectConverter;
 use CNastasi\Serializer\DefaultSerializer;

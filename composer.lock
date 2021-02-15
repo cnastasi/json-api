@@ -105,16 +105,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cnastasi/serializer.git",
-                "reference": "74a8c3773aed311f450221bd20021fec27b4ccf6"
+                "reference": "bc34b6ef6e5f7e57d0ac1da8916b49c15e770257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cnastasi/serializer/zipball/74a8c3773aed311f450221bd20021fec27b4ccf6",
-                "reference": "74a8c3773aed311f450221bd20021fec27b4ccf6",
+                "url": "https://api.github.com/repos/cnastasi/serializer/zipball/bc34b6ef6e5f7e57d0ac1da8916b49c15e770257",
+                "reference": "bc34b6ef6e5f7e57d0ac1da8916b49c15e770257",
                 "shasum": ""
             },
             "require": {
-                "cnastasi/ddd": "dev-master as v0.1.0",
+                "cnastasi/ddd": "dev-master",
                 "php": ">=7.4"
             },
             "require-dev": {
@@ -139,7 +139,7 @@
                 }
             ],
             "description": "A experimental serializer using php 7.4 typed properties and reflection",
-            "time": "2021-02-11T08:39:34+00:00"
+            "time": "2021-02-11T11:46:01+00:00"
         },
         {
             "name": "psr/http-factory",

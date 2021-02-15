@@ -15,16 +15,14 @@ use CNastasi\JsonApi\Example\User;
 use CNastasi\JsonApi\Example\UserCollection;
 use CNastasi\Serializer\Converter\CollectionConverter;
 use CNastasi\Serializer\Converter\CompositeValueObjectConverter;
+use CNastasi\Serializer\Converter\DateTimeConverter;
 use CNastasi\Serializer\Converter\DateTimeImmutableConverter;
 use CNastasi\Serializer\Converter\SimpleValueObjectConverter;
 use CNastasi\Serializer\DefaultSerializer;
 use CNastasi\Serializer\SerializationLoopGuard;
 use CNastasi\Serializer\SerializerOptionsDefault;
-use Laminas\Diactoros\ResponseFactory;
-use Laminas\Diactoros\StreamFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Http\Message\ResponseInterface;
 
 class SimpleApiSerializerTest extends TestCase
 {
@@ -38,10 +36,11 @@ class SimpleApiSerializerTest extends TestCase
 
         $serializer = new DefaultSerializer(
             [
+                new DateTimeImmutableConverter(),
+                new DateTimeConverter(),
                 new SimpleValueObjectConverter(),
                 new CompositeValueObjectConverter(),
                 new CollectionConverter(),
-                new DateTimeImmutableConverter(),
             ],
             [
             ],
@@ -49,7 +48,7 @@ class SimpleApiSerializerTest extends TestCase
             new SerializerOptionsDefault(false)
         );
 
-        $this->apiSerializer = new SimpleApiSerializer($serializer, new ResponseFactory(), new StreamFactory());
+        $this->apiSerializer = new SimpleApiSerializer($serializer);
     }
 
     public function test_resorceSerialization(): void
@@ -69,7 +68,7 @@ class SimpleApiSerializerTest extends TestCase
             $flag
         );
 
-        $expectedResponse = [
+        $expectedData = [
             'data' => [
                 'name' => $name,
                 'age' => $age,
@@ -77,15 +76,15 @@ class SimpleApiSerializerTest extends TestCase
                     'street' => $street,
                     'city' => $city
                 ],
-                'birthDate' => $birthDate,
+                'phone' => null,
                 'flag' => $flag,
-                'phone' => null
+                'birthDate' => $birthDate,
             ]
         ];
 
-        $response = $this->apiSerializer->serialize($valueObject);
+        $data = $this->apiSerializer->serialize($valueObject);
 
-        $this->assertResponse($response, 200, $expectedResponse);
+        self::assertSame($expectedData, $data);
     }
 
     public function test_collectionSerialization(): void
@@ -95,11 +94,11 @@ class SimpleApiSerializerTest extends TestCase
         $now = new \DateTimeImmutable();
         $nowAsString = $now->format('Y-m-d H:i:s');
 
-        $expectedResponse = [
+        $expectedData = [
             'data' => [
-                ['id' => 1, 'name' => 'Foo', 'createdAt' => $nowAsString],
-                ['id' => 2, 'name' => 'Bar', 'createdAt' => $nowAsString],
-                ['id' => 3, 'name' => 'Baz', 'createdAt' => $nowAsString],
+                ['id' => 1, 'createdAt' => $nowAsString, 'name' => 'Foo'],
+                ['id' => 2, 'createdAt' => $nowAsString, 'name' => 'Bar'],
+                ['id' => 3, 'createdAt' => $nowAsString, 'name' => 'Baz'],
             ],
             'pagination' => [
                 'count' => 10,
@@ -114,26 +113,9 @@ class SimpleApiSerializerTest extends TestCase
         $collection->addItem($this->makeUser(2, 'Bar', $now));
         $collection->addItem($this->makeUser(3, 'Baz', $now));
 
-        $response = $this->apiSerializer->serialize($collection, new PaginationInfo(10, 2, 3));
+        $data = $this->apiSerializer->serialize($collection, new PaginationInfo(10, 2, 3));
 
-        $this->assertResponse($response, 200, $expectedResponse);
-    }
-
-    private function assertResponse(ResponseInterface $response, int $statusCode, array $expectedResponse): void
-    {
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame(['application/json'], $response->getHeader('Content-Type'));
-
-        $body = $response->getBody();
-        $body->rewind();
-
-        $content = $body->getContents();
-
-        $data = \json_decode($content, true, 512, JSON_THROW_ON_ERROR);
-
-        print_r($data);
-
-        self::assertEquals($expectedResponse, $data);
+        self::assertSame($expectedData, $data);
     }
 
     private function makeUser(int $id, string $name, \DateTimeImmutable $now): User

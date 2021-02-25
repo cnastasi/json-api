@@ -57,14 +57,14 @@ class SimpleApiSerializerTest extends TestCase
         $age = 99;
         $street = 'Via dei Glicini, 43';
         $city = 'Paperopoli';
-        $birthDate = '2000-10-24T00:00:00+00:00';
+        $birthDate = '2000-10-24 00:00:00';
         $flag = true;
 
         $valueObject = new Person(
             new Name($name),
             new Age($age),
             new Address($street, $city),
-            new \DateTimeImmutable($birthDate),
+            DateTime::fromString($birthDate),
             $flag
         );
 
@@ -96,9 +96,9 @@ class SimpleApiSerializerTest extends TestCase
 
         $expectedData = [
             'data' => [
-                ['id' => 1, 'createdAt' => $nowAsString, 'name' => 'Foo'],
-                ['id' => 2, 'createdAt' => $nowAsString, 'name' => 'Bar'],
-                ['id' => 3, 'createdAt' => $nowAsString, 'name' => 'Baz'],
+                ['id' => 1, 'name' => 'Foo', 'createdAt' => $nowAsString],
+                ['id' => 2, 'name' => 'Bar', 'createdAt' => $nowAsString],
+                ['id' => 3, 'name' => 'Baz', 'createdAt' => $nowAsString],
             ],
             'pagination' => [
                 'count' => 10,

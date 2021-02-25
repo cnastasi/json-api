@@ -11,10 +11,10 @@
   ],
   "require": {
     "ext-json": "*",
-    "cnastasi/ddd": "^0.1",
-    "cnastasi/serializer": "^0.10",
+    "cnastasi/ddd": "^0.2",
     "psr/http-message": "^1.0",
-    "psr/http-factory": "^1.0"
+    "psr/http-factory": "^1.0",
+    "cnastasi/serializer": "^0.11.1"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",

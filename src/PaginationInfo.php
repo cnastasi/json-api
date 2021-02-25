@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace CNastasi\JsonApi;
 
+use CNastasi\DDD\Contract\Comparable;
 use CNastasi\DDD\Contract\CompositeValueObject;
+use CNastasi\DDD\Error\IncomparableObjects;
+use CNastasi\JsonApi\Example\User;
 
 class PaginationInfo implements CompositeValueObject
 {
@@ -32,5 +35,16 @@ class PaginationInfo implements CompositeValueObject
     public function getLimit(): int
     {
         return $this->limit;
+    }
+
+    public function equalsTo(Comparable $item): bool
+    {
+        if ($item instanceof static) {
+            return $this->count === $item->count
+                && $this->page === $item->page
+                && $this->limit === $item->limit;
+        }
+
+        throw new IncomparableObjects($item, $this);
     }
 }

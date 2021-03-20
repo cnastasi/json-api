@@ -29,7 +29,10 @@ final class SimpleApiSerializer implements ApiSerializer
         return $body;
     }
 
-    private function serializeResource($object): array
+    /**
+     * @return int|string|array|bool
+     */
+    private function serializeResource($object)
     {
         return $this->serializer->serialize($object, true);
     }
